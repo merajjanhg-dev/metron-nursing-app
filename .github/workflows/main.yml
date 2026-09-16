@@ -39,6 +39,21 @@ jobs:
       - name: Sync
         run: npx cap sync android
 
+      - name: Fix kotlin-stdlib duplicate
+        run: |
+          cat >> android/build.gradle << 'EOF'
+
+allprojects {
+    configurations.all {
+        resolutionStrategy {
+            force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
+            force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22'
+            force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
+        }
+    }
+}
+EOF
+
       - name: Build APK
         run: |
           cd android
